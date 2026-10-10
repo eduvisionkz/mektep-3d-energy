@@ -28,6 +28,14 @@ const photoBtn = (groups, label = 'Нақты фото') =>
 export function renderAbout(body) {
   body.innerHTML = `
   <section class="sec">
+    <table class="kv">
+      <tr><th>Жоба</th><td>${PROJECT.title}</td></tr>
+      <tr><th>Автор</th><td>${PROJECT.author}, ${PROJECT.grade}</td></tr>
+      <tr><th>Ғылыми жетекші</th><td>${PROJECT.advisor}</td></tr>
+      <tr><th>Мектеп</th><td>${PROJECT.school}, ${PROJECT.region}</td></tr>
+    </table>
+  </section>
+  <section class="sec">
     <p class="lead">Алдымен ғылыми зерттеу жүргізілді: мектеп туралы берілген деректер мен ашық белгіленген модельдік параметрлер бойынша жарықтандырудың энергия тұтынуы есептелді. Бұл 3D мектеп сол зерттеудің нәтижесін көрнекі көрсететін <b>практикалық өнім</b>. 3D модель зерттеудің дәлелі емес, оның көрнекі нұсқасы.</p>
   </section>
   <section class="sec">
