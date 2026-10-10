@@ -3,7 +3,7 @@
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import { STAGES, SHOTS, NUM, SCENARIOS } from './stages.js';
-import { REAL, MODEL } from '../data/schoolData.js';
+import { REAL, MODEL, PROJECT } from '../data/schoolData.js';
 import { lampDay, mixedDay, savingPct, fmt, fmtInt } from '../model/energy.js';
 
 const STORE_KEY = 'mektep-defense-meta';
@@ -11,8 +11,17 @@ const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&l
 const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 const { currentLampW: P0, ledLampW: P1, hoursPerDay: H, daysPerYear: DY } = MODEL;
 
+const DEFAULT_META = {
+  author: `${PROJECT.author}, ${PROJECT.grade}`,
+  advisor: PROJECT.advisor,
+  school: `${PROJECT.school}, ${PROJECT.region}`,
+};
 function loadMeta() {
-  try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (e) { return {}; }
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (e) { /* жеке терезе */ }
+  const m = { ...DEFAULT_META };
+  for (const k of Object.keys(m)) if (typeof saved[k] === 'string' && saved[k].trim()) m[k] = saved[k];
+  return m;
 }
 function saveMeta(m) {
   try { localStorage.setItem(STORE_KEY, JSON.stringify(m)); } catch (e) { /* жеке терезе */ }
@@ -292,7 +301,7 @@ export class DefenseMode {
           <dt>Ғылыми жетекші</dt><dd>${field('advisor', '[жетекшінің аты-жөні]')}</dd>
           <dt>Мектеп</dt><dd>${field('school', '[мектеп атауы]')}</dd>
         </dl>
-        <p class="dhint">Аты-жөнді осы жерге бір рет жазыңыз — браузерде сақталады.</p>`;
+`;
       body.querySelectorAll('.dmeta-v').forEach((f) => {
         f.addEventListener('input', () => { this.meta[f.dataset.k] = f.textContent.trim(); saveMeta(this.meta); });
         f.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); f.blur(); } });
